@@ -1,5 +1,5 @@
 # Debezium MYSQL UTCTimestamp Converter  
-Currently debezium converts all of timestamp field into UTC and sometimes we need local timestamp in upstream tools (Apache Hive in our cases). 
+Currently debezium converts all of timestamp fields into UTC and sometimes we need local timestamp in upstream tools (Apache Hive in our cases). 
 
 ## Make Package
 ```
