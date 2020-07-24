@@ -17,7 +17,7 @@ public class UTCTimestampConverter implements CustomConverter<SchemaBuilder, Rel
     private static final String UTC_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String LOCAL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
-    private SchemaBuilder datetimeSchema = SchemaBuilder.string().optional().name("io.debezium.time.ZonedTimestamp");
+    private SchemaBuilder timestampSchema = SchemaBuilder.string().name("snapp.time.TimestampString");
     private SimpleDateFormat utcFormatter, localFormatter;
 
     @Override
@@ -33,12 +33,21 @@ public class UTCTimestampConverter implements CustomConverter<SchemaBuilder, Rel
     @Override
     public void converterFor(RelationalColumn column, ConverterRegistration<SchemaBuilder> registration) {
 
-        if ("TIMESTAMP".equals(column.typeName())) {
-            registration.register(datetimeSchema, value -> {
-                if (value == null)
-                    return value;
-
+        if ("TIMESTAMP".equalsIgnoreCase(column.typeName())) {
+            registration.register(timestampSchema, value -> {
+                
                 String localTimestampStr = "";
+                
+                if (value == null){
+                    if (column.isOptional()){
+                        return null;
+                    }
+                    else if (column.hasDefaultValue()) {
+                        return column.defaultValue();
+                    }
+                    else
+                        return localTimestampStr;
+                }
 
                 try {
                     Date utcDate = this.utcFormatter.parse(value.toString());
