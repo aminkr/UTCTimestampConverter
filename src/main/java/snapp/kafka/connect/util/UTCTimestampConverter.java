@@ -17,7 +17,6 @@ public class UTCTimestampConverter implements CustomConverter<SchemaBuilder, Rel
     private static final String UTC_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String LOCAL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
-    private SchemaBuilder timestampSchema = SchemaBuilder.string().name("snapp.time.TimestampString");
     private SimpleDateFormat utcFormatter, localFormatter;
 
     @Override
@@ -34,7 +33,7 @@ public class UTCTimestampConverter implements CustomConverter<SchemaBuilder, Rel
     public void converterFor(RelationalColumn column, ConverterRegistration<SchemaBuilder> registration) {
 
         if ("TIMESTAMP".equalsIgnoreCase(column.typeName())) {
-            registration.register(timestampSchema, value -> {
+            registration.register(SchemaBuilder.string().optional(), value -> {
                 
                 String localTimestampStr = "";
                 
